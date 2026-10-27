@@ -4,7 +4,7 @@ import { getColyseusRoom } from '../game/Game';
 
 export function ChatPanel() {
     const [messages, setMessages] = useState<{ sender: string, text: string }[]>([
-        { sender: 'System', text: 'Office environment initialized.' }
+        { sender: '시스템', text: '사무실 환경이 초기화되었습니다.' }
     ]);
     const [input, setInput] = useState('');
     const endRef = useRef<HTMLDivElement>(null);
@@ -28,13 +28,13 @@ export function ChatPanel() {
             room.send('chat', { text: input });
             setInput('');
         } else {
-            setMessages(prev => [...prev, { sender: 'System', text: 'Error: Cannot send message, Colyseus not connected.' }]);
+            setMessages(prev => [...prev, { sender: '시스템', text: '오류: 메시지를 전송할 수 없습니다. 서버(Colyseus) 연결 상태를 확인하세요.' }]);
         }
     };
 
     return (
         <div style={{ position: 'absolute', right: 20, bottom: 20, width: 300, height: 400, backgroundColor: 'rgba(0,0,0,0.8)', color: 'white', padding: 16, borderRadius: 8, display: 'flex', flexDirection: 'column' }}>
-            <h3 style={{ margin: '0 0 10px 0' }}>Office Chat</h3>
+            <h3 style={{ margin: '0 0 10px 0' }}>사무실 채팅</h3>
             <div style={{ flex: 1, overflowY: 'auto', fontSize: '14px', marginBottom: 10, paddingRight: 4 }}>
                 {messages.map((m, i) => (
                     <p key={i} style={{ margin: '6px 0', lineHeight: '1.4' }}>
@@ -45,7 +45,7 @@ export function ChatPanel() {
             </div>
             <input
                 type="text"
-                placeholder="Send a message..."
+                placeholder="메시지를 입력하세요..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && send()}

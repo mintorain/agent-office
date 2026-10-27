@@ -14,6 +14,11 @@ const actionIcons: Record<string, string> = {
     'use_tool': '🔧', 'move': '🚶', 'think': '💡'
 };
 
+const actionLabels: Record<string, string> = {
+    'work': '업무수행', 'talk': '대화중', 'idle': '대기중',
+    'use_tool': '도구사용', 'move': '이동중', 'think': '고민중'
+};
+
 export function SystemLog() {
     const [logs, setLogs] = useState<LogEntry[]>([]);
     const [isOpen, setIsOpen] = useState(true);
@@ -58,7 +63,7 @@ export function SystemLog() {
                     cursor: 'pointer', fontSize: '11px', zIndex: 10
                 }}
             >
-                📊 Activity Log
+                📊 시스템 활동 로그
             </button>
         );
     }
@@ -74,13 +79,13 @@ export function SystemLog() {
             zIndex: 10
         }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <h3 style={{ margin: 0, fontSize: '13px' }}>📊 System Activity Log</h3>
+                <h3 style={{ margin: 0, fontSize: '13px' }}>📊 시스템 활동 로그</h3>
                 <button onClick={() => setIsOpen(false)} style={{ background: 'none', border: 'none', color: '#666', cursor: 'pointer', fontSize: '14px' }}>✕</button>
             </div>
 
             <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto', fontSize: '10px', lineHeight: 1.5 }}>
                 {logs.length === 0 && (
-                    <p style={{ color: '#555', fontStyle: 'italic', margin: 0 }}>Waiting for agent events...</p>
+                    <p style={{ color: '#555', fontStyle: 'italic', margin: 0 }}>에이전트 이벤트를 기다리는 중...</p>
                 )}
                 {logs.map(log => (
                     <div key={log.id} style={{
@@ -92,7 +97,7 @@ export function SystemLog() {
                         <span>
                             <strong style={{ color: log.agent === 'Alice' ? '#aaffaa' : '#3a86ff' }}>{log.agent}</strong>
                             {' '}
-                            <span style={{ color: '#888' }}>{log.action}</span>
+                            <span style={{ color: '#888' }}>{actionLabels[log.action] || log.action}</span>
                             {log.thought && <span style={{ color: '#666', fontStyle: 'italic' }}> — "{log.thought.slice(0, 60)}"</span>}
                         </span>
                     </div>

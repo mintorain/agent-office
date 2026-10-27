@@ -3,19 +3,19 @@ import { getColyseusRoom } from '../game/Game';
 import { eventBus } from '../events';
 import { FloatingPanel } from './FloatingPanel';
 
-const SCENARIOS = ['Startup Crunch', 'Hackathon Night', 'Incident War Room', 'Product Launch'] as const;
+const SCENARIOS = ['스타트업 위기 상황', '해커톤 밤샘 작업', '장애 대응 워룸', '신제품 런칭'] as const;
 const CHAOS_EVENTS = [
-    { id: 'server_outage', label: 'Server Outage' },
-    { id: 'funding_cut', label: 'Funding Cut' },
-    { id: 'client_escalation', label: 'Client Escalation' },
-    { id: 'surprise_launch', label: 'Surprise Launch' },
-    { id: 'viral_tweet', label: 'Viral Tweet' },
+    { id: 'server_outage', label: '서버 마비' },
+    { id: 'funding_cut', label: '자금 삭감' },
+    { id: 'client_escalation', label: '고객 클레임' },
+    { id: 'surprise_launch', label: '기습 출시' },
+    { id: 'viral_tweet', label: '트윗 바이럴' },
 ] as const;
 
 export function ViralControlPanel() {
     const [scenario, setScenario] = useState<string>(SCENARIOS[0]);
     const [cinematicMode, setCinematicMode] = useState(true);
-    const [lastEvent, setLastEvent] = useState('Idle');
+    const [lastEvent, setLastEvent] = useState('대기 중');
     const [voteStatus, setVoteStatus] = useState('');
 
     useEffect(() => {
@@ -28,7 +28,7 @@ export function ViralControlPanel() {
             if (detail?.label) {
                 setLastEvent(detail.label);
             } else if (detail?.scenario) {
-                setLastEvent(`Scenario: ${detail.scenario}`);
+                setLastEvent(`시나리오: ${detail.scenario}`);
             }
         };
         eventBus.addEventListener('scenario-event', handler);
@@ -59,27 +59,27 @@ export function ViralControlPanel() {
             });
             const data = await response.json();
             if (data?.ok) {
-                setVoteStatus(`${eventId}: ${data.tally} votes${data.triggered ? ' (TRIGGERED)' : ''}`);
+                setVoteStatus(`${eventId}: ${data.tally}표${data.triggered ? ' (유발됨!)' : ''}`);
             } else {
-                setVoteStatus('Vote failed');
+                setVoteStatus('투표 실패');
             }
         } catch {
-            setVoteStatus('Vote failed');
+            setVoteStatus('투표 실패');
         }
     };
 
     return (
         <FloatingPanel
             id="viral-control"
-            title="Showrunner Controls"
-            subtitle="Viral Mode Console"
+            title="시나리오 및 카오스 통제"
+            subtitle="바이럴 모드 제어 콘솔"
             width={330}
             defaultDock="right"
             defaultY={20}
             zIndex={18}
         >
             <div style={{ fontSize: 11, color: '#babedc', marginTop: 8, marginBottom: 10 }}>
-                Last event: <strong style={{ color: '#ffd6a5' }}>{lastEvent}</strong>
+                최근 이벤트: <strong style={{ color: '#ffd6a5' }}>{lastEvent}</strong>
             </div>
 
             <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
@@ -112,7 +112,7 @@ export function ViralControlPanel() {
                         background: 'linear-gradient(135deg, #ffadad, #ffd6a5)'
                     }}
                 >
-                    Start
+                    시작
                 </button>
             </div>
 
@@ -122,10 +122,10 @@ export function ViralControlPanel() {
                     checked={cinematicMode}
                     onChange={(e) => setCinematicMode(e.target.checked)}
                 />
-                Cinematic camera auto-focus
+                시네마틱 카메라 자동 포커스
             </label>
 
-            <div style={{ fontSize: 12, marginBottom: 6, color: '#ffcad4' }}>Chaos Buttons</div>
+            <div style={{ fontSize: 12, marginBottom: 6, color: '#ffcad4' }}>카오스 유발 버튼</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
                 {CHAOS_EVENTS.map((event) => (
                     <div key={event.id} style={{ display: 'flex', gap: 4 }}>
@@ -157,7 +157,7 @@ export function ViralControlPanel() {
                                 fontSize: 11
                             }}
                         >
-                            Vote
+                            투표
                         </button>
                     </div>
                 ))}

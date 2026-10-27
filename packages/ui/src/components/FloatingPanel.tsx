@@ -148,7 +148,7 @@ export function FloatingPanel({
                         color: '#f4f8ff',
                         background: 'rgba(255,255,255,0.08)'
                     }}
-                    title={minimized ? 'Expand panel' : 'Minimize panel'}
+                    title={minimized ? '패널 확장' : '패널 축소'}
                 >
                     {minimized ? '+' : '-'}
                 </button>

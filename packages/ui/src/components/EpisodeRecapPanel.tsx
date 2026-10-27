@@ -13,18 +13,18 @@ export function EpisodeRecapPanel() {
     const [status, setStatus] = useState('');
 
     const loadRecap = async () => {
-        setStatus('Loading recap...');
+        setStatus('요약 리포트를 가져오는 중...');
         try {
             const response = await fetch('/api/episode-recap');
             const data = await response.json();
             if (!data?.ok) {
-                setStatus('No recap available yet.');
+                setStatus('아직 요약 리포트가 준비되지 않았습니다.');
                 return;
             }
             setRecap(data.recap);
-            setStatus('Recap ready.');
+            setStatus('요약 리포트 로드 성공.');
         } catch {
-            setStatus('Failed to load recap.');
+            setStatus('요약 리포트 로드 실패.');
         }
     };
 
@@ -42,8 +42,8 @@ export function EpisodeRecapPanel() {
     return (
         <FloatingPanel
             id="episode-recap"
-            title="Episode Recap"
-            subtitle="Export-ready run summary"
+            title="에피소드 리캡"
+            subtitle="내보내기용 시뮬레이션 요약"
             width={340}
             defaultDock="left"
             defaultY={220}
@@ -53,11 +53,11 @@ export function EpisodeRecapPanel() {
                 <button onClick={loadRecap} style={{
                     border: 'none', borderRadius: 8, padding: '7px 10px', cursor: 'pointer',
                     background: '#b388ff', color: '#1e1130', fontWeight: 700, fontSize: 11
-                }}>Load</button>
+                }}>가져오기</button>
                 <button onClick={exportRecap} disabled={!recap} style={{
                     border: '1px solid rgba(255,255,255,0.2)', borderRadius: 8, padding: '7px 10px', cursor: 'pointer',
                     background: recap ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.03)', color: '#f2e9ff', fontSize: 11
-                }}>Export JSON</button>
+                }}>JSON 내보내기</button>
             </div>
             <div style={{ fontSize: 11, color: '#d9c8f2', marginBottom: 8 }}>{status}</div>
 
@@ -67,18 +67,18 @@ export function EpisodeRecapPanel() {
                         {recap.outcomeCard.title}: {recap.outcomeCard.summary}
                     </div>
                     <div style={{ fontSize: 11, marginBottom: 6 }}>
-                        Active alliances/rivalries: <strong>{recap.outcomeCard.activeRelationships}</strong>
+                        동맹 및 경쟁 관계 수: <strong>{recap.outcomeCard.activeRelationships}</strong>
                     </div>
-                    <div style={{ fontSize: 11, marginBottom: 4, color: '#cdb4db' }}>Top Highlights</div>
+                    <div style={{ fontSize: 11, marginBottom: 4, color: '#cdb4db' }}>주요 하이라이트</div>
                     {recap.topHighlights.slice(0, 3).map((h, i) => (
                         <div key={i} style={{ fontSize: 10, marginBottom: 5, color: '#efe1ff' }}>
                             • {h.title}
                         </div>
                     ))}
-                    <div style={{ fontSize: 11, marginTop: 6, marginBottom: 4, color: '#cdb4db' }}>Leaderboard</div>
+                    <div style={{ fontSize: 11, marginTop: 6, marginBottom: 4, color: '#cdb4db' }}>영향력 리더보드</div>
                     {recap.leaderboard.slice(0, 3).map((a, i) => (
                         <div key={i} style={{ fontSize: 10, marginBottom: 4, color: '#efe1ff' }}>
-                            {i + 1}. {a.name} ({Math.round(a.impact * 100)} impact)
+                            {i + 1}. {a.name} (영향력 {Math.round(a.impact * 100)}%)
                         </div>
                     ))}
                 </>

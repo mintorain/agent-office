@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getColyseusRoom } from '../game/Game';
+import { FloatingPanel } from './FloatingPanel';
 
 interface TaskItem {
     id: number;
@@ -12,6 +13,7 @@ export function TaskBoard() {
     const [tasks, setTasks] = useState<TaskItem[]>([]);
     const [newTask, setNewTask] = useState('');
     const [targetAgent, setTargetAgent] = useState('auto');
+    const [activeAgents, setActiveAgents] = useState<{ id: string, name: string }[]>([]);
 
     useEffect(() => {
         const checkRoom = setInterval(() => {
@@ -34,6 +36,20 @@ export function TaskBoard() {
                         status: t.status
                     })));
                 });
+
+                // Sync agents list
+                const updateAgentsList = () => {
+                    const list: { id: string, name: string }[] = [];
+                    room.state.agents.forEach((agent: any, id: string) => {
+                        list.push({ id, name: agent.name });
+                    });
+                    setActiveAgents(list);
+                };
+
+                room.state.agents.onAdd(() => updateAgentsList());
+                room.state.agents.onRemove(() => updateAgentsList());
+                updateAgentsList(); // Initial sync
+
                 clearInterval(checkRoom);
             }
         }, 500);
@@ -63,83 +79,82 @@ export function TaskBoard() {
     };
 
     return (
-        <div style={{
-            position: 'absolute', left: 20, top: 20, width: 280,
-            backgroundColor: 'rgba(10,10,30,0.92)', color: 'white',
-            padding: 16, borderRadius: 12,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
-            backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(108,92,231,0.3)',
-            maxHeight: '50vh', display: 'flex', flexDirection: 'column'
-        }}>
-            <h3 style={{ margin: '0 0 10px 0', fontSize: '14px', display: 'flex', alignItems: 'center', gap: 6 }}>
-                📋 Task Board
-            </h3>
-
-            {/* Task Assignment Form */}
-            <form onSubmit={handleSubmit} style={{ marginBottom: 10 }}>
-                <input
-                    type="text"
-                    value={newTask}
-                    onChange={(e) => setNewTask(e.target.value)}
-                    placeholder="Assign a task..."
-                    style={{
-                        width: '100%', padding: '8px 10px', borderRadius: 6,
-                        border: '1px solid #444', backgroundColor: '#1a1a3e',
-                        color: 'white', fontSize: '12px', outline: 'none',
-                        boxSizing: 'border-box', marginBottom: 6
-                    }}
-                />
-                <div style={{ display: 'flex', gap: 6 }}>
-                    <select
-                        value={targetAgent}
-                        onChange={(e) => setTargetAgent(e.target.value)}
+        <FloatingPanel
+            id="task-board"
+            title="📋 작업 보드"
+            subtitle="작업 할당 및 진행도"
+            width={280}
+            defaultDock="left"
+            defaultY={20}
+            zIndex={12}
+        >
+            <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '42vh' }}>
+                {/* Task Assignment Form */}
+                <form onSubmit={handleSubmit} style={{ marginBottom: 10 }}>
+                    <input
+                        type="text"
+                        value={newTask}
+                        onChange={(e) => setNewTask(e.target.value)}
+                        placeholder="새 작업 지시 입력..."
                         style={{
-                            flex: 1, padding: '6px', borderRadius: 6,
+                            width: '100%', padding: '8px 10px', borderRadius: 6,
                             border: '1px solid #444', backgroundColor: '#1a1a3e',
-                            color: '#aaa', fontSize: '11px'
+                            color: 'white', fontSize: '12px', outline: 'none',
+                            boxSizing: 'border-box', marginBottom: 6
                         }}
-                    >
-                        <option value="auto">🤖 Auto-assign</option>
-                        <option value="alice">Alice (Engineer)</option>
-                        <option value="bob">Bob (PM)</option>
-                    </select>
-                    <button type="submit" style={{
-                        padding: '6px 14px', borderRadius: 6, border: 'none',
-                        backgroundColor: '#6c5ce7', color: 'white', fontSize: '11px',
-                        cursor: 'pointer', fontWeight: 'bold'
-                    }}>
-                        Assign
-                    </button>
-                </div>
-            </form>
-
-            {/* Task List */}
-            <div style={{ flex: 1, overflowY: 'auto', fontSize: '12px' }}>
-                {tasks.length === 0 && (
-                    <p style={{ color: '#666', fontStyle: 'italic', margin: 0, fontSize: '11px' }}>
-                        No tasks yet. Type above to assign work to agents!
-                    </p>
-                )}
-                {tasks.map(task => (
-                    <div key={task.id} style={{
-                        padding: '6px 8px', marginBottom: 4, borderRadius: 6,
-                        backgroundColor: 'rgba(255,255,255,0.05)',
-                        borderLeft: `3px solid ${statusColor(task.status)}`
-                    }}>
-                        <div style={{ fontWeight: 'bold', fontSize: '11px' }}>
-                            {statusIcon(task.status)} {task.title}
-                        </div>
-                        <div style={{ fontSize: '10px', color: '#888', marginTop: 2 }}>
-                            → {task.assigned_to || 'Unassigned'}
-                        </div>
+                    />
+                    <div style={{ display: 'flex', gap: 6 }}>
+                        <select
+                            value={targetAgent}
+                            onChange={(e) => setTargetAgent(e.target.value)}
+                            style={{
+                                flex: 1, padding: '6px', borderRadius: 6,
+                                border: '1px solid #444', backgroundColor: '#1a1a3e',
+                                color: '#aaa', fontSize: '11px'
+                            }}
+                        >
+                            <option value="auto">🤖 자동 할당</option>
+                            {activeAgents.map(a => (
+                                <option key={a.id} value={a.id}>{a.name}</option>
+                            ))}
+                        </select>
+                        <button type="submit" style={{
+                            padding: '6px 14px', borderRadius: 6, border: 'none',
+                            backgroundColor: '#6c5ce7', color: 'white', fontSize: '11px',
+                            cursor: 'pointer', fontWeight: 'bold'
+                        }}>
+                            할당
+                        </button>
                     </div>
-                ))}
-            </div>
+                </form>
 
-            <div style={{ marginTop: 8, fontSize: '10px', color: '#555', borderTop: '1px solid #333', paddingTop: 6 }}>
-                🤖 Engine: Ollama Local • 💾 SQLite Persistence
+                {/* Task List */}
+                <div style={{ flex: 1, overflowY: 'auto', fontSize: '12px', maxHeight: '25vh' }}>
+                    {tasks.length === 0 && (
+                        <p style={{ color: '#666', fontStyle: 'italic', margin: 0, fontSize: '11px' }}>
+                            아직 할당된 작업이 없습니다. 위 입력창에 지시사항을 적어 업무를 시작해보세요!
+                        </p>
+                    )}
+                    {tasks.map(task => (
+                        <div key={task.id} style={{
+                            padding: '6px 8px', marginBottom: 4, borderRadius: 6,
+                            backgroundColor: 'rgba(255,255,255,0.05)',
+                            borderLeft: `3px solid ${statusColor(task.status)}`
+                        }}>
+                            <div style={{ fontWeight: 'bold', fontSize: '11px' }}>
+                                {statusIcon(task.status)} {task.title}
+                            </div>
+                            <div style={{ fontSize: '10px', color: '#888', marginTop: 2 }}>
+                                → {task.assigned_to || '미할당'}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div style={{ marginTop: 8, fontSize: '10px', color: '#555', borderTop: '1px solid #333', paddingTop: 6 }}>
+                    🤖 엔진: LLM 멀티 백엔드 • 💾 SQLite 영구 저장소
+                </div>
             </div>
-        </div>
+        </FloatingPanel>
     );
 }

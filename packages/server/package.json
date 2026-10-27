@@ -13,6 +13,7 @@
         "@agent-office/adapters": "^1.0.0",
         "@colyseus/schema": "^2.0.22",
         "colyseus": "^0.15.0",
+        "dotenv": "^16.4.5",
         "express": "^4.19.2",
         "sqlite": "^5.1.1",
         "sqlite3": "^5.1.7",

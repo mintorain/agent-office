@@ -148,257 +148,7 @@ export class OfficeScene extends Phaser.Scene {
             this.add.text(380, 46, '💡 Collab Area', { fontSize: '10px', color: '#e8a87c' }).setOrigin(0.5);
             this.add.text(438, 364, '☕ Coffee & Pantry', { fontSize: '10px', color: '#7fcdaa' }).setOrigin(0.5);
 
-            // ═══════════════════════════════════════════
-            //  MEETING ROOM FURNITURE
-            // ═══════════════════════════════════════════
-
-            // Large meeting table
-            g.fillStyle(0x6d4c2e, 1);
-            g.fillRect(72, 80, 120, 60);
-            g.fillStyle(0x7d5c3e, 1);
-            g.fillRect(76, 84, 112, 52); // table top highlight
-
-            // Chairs around meeting table (pixel circles)
-            const chairColor = 0x4a4a6a;
-            const chairs = [[92, 72], [132, 72], [172, 72], // top row
-            [92, 148], [132, 148], [172, 148], // bottom row
-            [64, 100], [64, 128], // left
-            [200, 100], [200, 128]]; // right
-            chairs.forEach(([cx, cy]) => {
-                g.fillStyle(chairColor, 1);
-                g.fillCircle(cx, cy, 6);
-                g.fillStyle(0x5a5a7a, 1);
-                g.fillCircle(cx, cy, 4);
-            });
-
-            // Whiteboard on meeting room wall
-            g.fillStyle(0xdfe6e9, 1);
-            g.fillRect(48, 36, 60, 30);
-            g.lineStyle(2, 0x636e72, 1);
-            g.strokeRect(48, 36, 60, 30);
-            // Whiteboard scribbles
-            g.lineStyle(1, 0x0984e3, 0.6);
-            g.beginPath();
-            g.moveTo(54, 46); g.lineTo(70, 42); g.lineTo(85, 50); g.lineTo(100, 44);
-            g.strokePath();
-            g.lineStyle(1, 0xd63031, 0.6);
-            g.beginPath();
-            g.moveTo(54, 54); g.lineTo(75, 58); g.lineTo(95, 52);
-            g.strokePath();
-
-            // ═══════════════════════════════════════════
-            //  COLLAB AREA FURNITURE
-            // ═══════════════════════════════════════════
-
-            // Standing desks (2 side by side)
-            g.fillStyle(0x5a3e28, 1);
-            g.fillRect(300, 70, 48, 28);
-            g.fillStyle(0x6a4e38, 1);
-            g.fillRect(302, 72, 44, 24);
-
-            g.fillStyle(0x5a3e28, 1);
-            g.fillRect(410, 70, 48, 28);
-            g.fillStyle(0x6a4e38, 1);
-            g.fillRect(412, 72, 44, 24);
-
-            // Laptops on standing desks
-            const drawLaptop = (lx: number, ly: number) => {
-                g.fillStyle(0x636e72, 1);
-                g.fillRect(lx, ly, 16, 10); // screen
-                g.fillStyle(0x2d3436, 1);
-                g.fillRect(lx + 1, ly + 1, 14, 8);
-                g.fillStyle(0x636e72, 1);
-                g.fillRect(lx - 1, ly + 10, 18, 3); // keyboard
-            };
-            drawLaptop(312, 76);
-            drawLaptop(424, 76);
-
-            // Bean bags / lounge chairs in collab
-            g.fillStyle(0xe17055, 0.6);
-            g.fillCircle(320, 150, 14);
-            g.fillStyle(0xfdcb6e, 0.6);
-            g.fillCircle(370, 155, 14);
-            g.fillStyle(0x6c5ce7, 0.6);
-            g.fillCircle(430, 148, 14);
-
-            // ═══════════════════════════════════════════
-            //  WORK DESKS (with chairs in front)
-            // ═══════════════════════════════════════════
-
-            const drawWorkstation = (x: number, y: number, label: string, occupied: boolean) => {
-                // Desk surface
-                g.fillStyle(0x5a3e28, 1);
-                g.fillRect(x, y, 56, 28);
-                g.fillStyle(0x6d4c2e, 1);
-                g.fillRect(x + 2, y + 2, 52, 24);
-
-                // Monitor
-                g.fillStyle(0x2d3436, 1);
-                g.fillRect(x + 6, y + 3, 22, 14); // bezel
-                g.fillStyle(occupied ? 0x74b9ff : 0x2d3436, 1);
-                g.fillRect(x + 8, y + 5, 18, 10); // screen glow
-                g.fillStyle(0x636e72, 1);
-                g.fillRect(x + 14, y + 17, 10, 3); // stand
-                g.fillRect(x + 10, y + 20, 18, 2); // base
-
-                // Keyboard
-                g.fillStyle(0xb2bec3, 1);
-                g.fillRect(x + 6, y + 22, 18, 4);
-
-                // Mouse
-                g.fillStyle(0xb2bec3, 1);
-                g.fillRect(x + 28, y + 22, 5, 4);
-
-                // Notepad
-                g.fillStyle(0xffeaa7, 1);
-                g.fillRect(x + 36, y + 6, 12, 16);
-                g.lineStyle(1, 0xfdcb6e, 0.8);
-                g.beginPath();
-                g.moveTo(x + 38, y + 10); g.lineTo(x + 46, y + 10);
-                g.moveTo(x + 38, y + 14); g.lineTo(x + 46, y + 14);
-                g.moveTo(x + 38, y + 18); g.lineTo(x + 44, y + 18);
-                g.strokePath();
-
-                // Pen
-                g.fillStyle(0x0984e3, 1);
-                g.fillRect(x + 50, y + 8, 2, 12);
-
-                // Coffee mug
-                g.fillStyle(0xd63031, 1);
-                g.fillCircle(x + 37, y + 24, 3);
-                g.fillStyle(0x2d3436, 1);
-                g.fillCircle(x + 37, y + 24, 1.5);
-
-                // Office chair (below desk)
-                g.fillStyle(0x2d3436, 1);
-                g.fillCircle(x + 22, y + 38, 8);
-                g.fillStyle(occupied ? 0x6c5ce7 : 0x4a4a6a, 1);
-                g.fillCircle(x + 22, y + 38, 6);
-
-                // Label
-                this.add.text(x + 28, y - 6, label, { fontSize: '8px', color: '#a0a0c0' }).setOrigin(0.5);
-            };
-
-            drawWorkstation(64, 240, '💻 Alice\'s Desk', true);
-            drawWorkstation(64, 320, '💻 Bob\'s Desk', true);
-            drawWorkstation(64, 400, '💻 Vacant', false);
-
-            // ═══════════════════════════════════════════
-            //  COFFEE & PANTRY AREA
-            // ═══════════════════════════════════════════
-
-            // Counter
-            g.fillStyle(0x5a3e28, 1);
-            g.fillRect(370, 380, 80, 20);
-            g.fillStyle(0x6d4c2e, 1);
-            g.fillRect(372, 382, 76, 16);
-
-            // Coffee machine
-            g.fillStyle(0x2d3436, 1);
-            g.fillRect(380, 370, 20, 24);
-            g.fillStyle(0x636e72, 1);
-            g.fillRect(382, 372, 16, 12);
-            g.fillStyle(0xd63031, 1);
-            g.fillCircle(390, 390, 2); // power light
-
-            // Microwave
-            g.fillStyle(0xdfe6e9, 1);
-            g.fillRect(410, 372, 20, 16);
-            g.fillStyle(0x2d3436, 1);
-            g.fillRect(412, 374, 12, 12);
-            g.fillStyle(0x00b894, 1);
-            g.fillRect(427, 376, 2, 2); // light
-
-            // Small table with snacks
-            g.fillStyle(0x5a3e28, 1);
-            g.fillRect(380, 440, 40, 30);
-            g.fillStyle(0x6d4c2e, 1);
-            g.fillRect(382, 442, 36, 26);
-            // Fruit bowl
-            g.fillStyle(0xfdcb6e, 1);
-            g.fillCircle(392, 452, 4);
-            g.fillStyle(0xe17055, 1);
-            g.fillCircle(400, 450, 3);
-            g.fillStyle(0x00b894, 1);
-            g.fillCircle(408, 454, 4);
-
-            // Chairs around snack table
-            g.fillStyle(0x4a4a6a, 1);
-            g.fillCircle(375, 445, 5);
-            g.fillCircle(375, 460, 5);
-            g.fillCircle(425, 445, 5);
-            g.fillCircle(425, 460, 5);
-
-            // Water cooler
-            g.fillStyle(0x74b9ff, 0.6);
-            g.fillRect(470, 380, 12, 24);
-            g.fillStyle(0xdfe6e9, 1);
-            g.fillRect(468, 404, 16, 16);
-            g.fillStyle(0x74b9ff, 0.4);
-            g.fillRect(470, 382, 8, 16); // water level
-            this.add.text(476, 424, '💧', { fontSize: '8px' }).setOrigin(0.5);
-
-            // ═══════════════════════════════════════════
-            //  DECORATIONS
-            // ═══════════════════════════════════════════
-
-            // Potted plants
-            const drawPlant = (px: number, py: number) => {
-                // Pot
-                g.fillStyle(0x8b4513, 1);
-                g.fillRect(px - 5, py, 10, 8);
-                g.fillStyle(0xa0522d, 1);
-                g.fillRect(px - 4, py + 1, 8, 6);
-                // Soil
-                g.fillStyle(0x3e2723, 1);
-                g.fillRect(px - 3, py, 6, 2);
-                // Leaves
-                g.fillStyle(0x27ae60, 1);
-                g.fillCircle(px, py - 4, 6);
-                g.fillStyle(0x2ecc71, 1);
-                g.fillCircle(px - 3, py - 6, 4);
-                g.fillCircle(px + 4, py - 5, 4);
-            };
-
-            drawPlant(24, 210);   // near desks
-            drawPlant(140, 210);  // between meeting room and desks
-            drawPlant(250, 210);  // center
-            drawPlant(530, 380);  // near coffee area
-            drawPlant(24, 500);   // bottom left
-            drawPlant(550, 200);  // right side
-
-            // Bookshelf on right wall
-            g.fillStyle(0x5a3e28, 1);
-            g.fillRect(540, 50, 40, 80);
-            g.fillStyle(0x6d4c2e, 1);
-            g.fillRect(542, 52, 36, 18); // shelf 1
-            g.fillRect(542, 72, 36, 18); // shelf 2
-            g.fillRect(542, 92, 36, 18); // shelf 3
-            // Books
-            const bookColors = [0xd63031, 0x0984e3, 0xfdcb6e, 0x00b894, 0x6c5ce7, 0xe17055];
-            for (let b = 0; b < 6; b++) {
-                g.fillStyle(bookColors[b], 1);
-                g.fillRect(544 + b * 5, 54, 4, 14);
-            }
-            for (let b = 0; b < 5; b++) {
-                g.fillStyle(bookColors[b + 1], 1);
-                g.fillRect(544 + b * 6, 74, 4, 14);
-            }
-
-            // Printer
-            g.fillStyle(0xdfe6e9, 1);
-            g.fillRect(540, 140, 30, 18);
-            g.fillStyle(0xb2bec3, 1);
-            g.fillRect(542, 142, 26, 10);
-            g.fillStyle(0x2d3436, 1);
-            g.fillRect(545, 155, 6, 2); // paper slot
-            this.add.text(555, 164, '🖨️', { fontSize: '8px' }).setOrigin(0.5);
-
-            // Welcome mat / rug at center
-            g.fillStyle(0x6c5ce7, 0.15);
-            g.fillRect(200, 240, 120, 80);
-            g.lineStyle(1, 0x6c5ce7, 0.3);
-            g.strokeRect(200, 240, 120, 80);
+            // (정적 가구 드로잉 로직이 동적 레이아웃과의 중복 및 꼬임 해결을 위해 전면 삭제되었습니다.)
 
             // ═══════════════════════════════════════════
             //  SUBTLE GRID (very faint)
@@ -438,19 +188,69 @@ export class OfficeScene extends Phaser.Scene {
                 const detail = (e as CustomEvent).detail as { enabled: boolean };
                 this.layoutEditMode = Boolean(detail?.enabled);
                 if (!this.layoutEditMode) this.layoutDragItemId = null;
+                
+                // 가구 라벨 표시 제어 (편집 시에만 이름 표시)
+                if (this.customLayoutLayer) {
+                    this.customLayoutLayer.iterate((group: any) => {
+                        if (group instanceof Phaser.GameObjects.Container) {
+                            const label = group.getByName('furniture-label') as Phaser.GameObjects.Text;
+                            if (label) {
+                                label.setVisible(this.layoutEditMode);
+                            }
+                        }
+                    });
+                }
             });
 
             this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
                 if (!this.layoutEditMode || !this.layoutDragItemId || !pointer.isDown) return;
-                const gx = Phaser.Math.Clamp(Math.round(pointer.worldX / 16), 2, 36);
-                const gy = Phaser.Math.Clamp(Math.round(pointer.worldY / 16), 2, 36);
-                this.layoutItems = this.layoutItems.map((item) =>
-                    item.id === this.layoutDragItemId ? { ...item, x: gx, y: gy } : item
-                );
-                this.renderCustomLayout(this.layoutItems);
-                eventBus.dispatchEvent(new CustomEvent('layout-item-moved', { detail: { items: this.layoutItems } }));
+                
+                // 16px 그리드 연산 없이, 마우스 월드 좌표로 부드럽게 직접 픽셀 이동
+                if (this.customLayoutLayer) {
+                    this.customLayoutLayer.iterate((child: any) => {
+                        if (child instanceof Phaser.GameObjects.Container && child.getData('id') === this.layoutDragItemId) {
+                            child.x = pointer.worldX;
+                            child.y = pointer.worldY;
+                            child.setAlpha(0.65); // 드래그 중 반투명 피드백 유지
+                        }
+                    });
+                }
             });
             this.input.on('pointerup', () => {
+                if (!this.layoutEditMode || !this.layoutDragItemId) return;
+
+                let snapX = 0;
+                let snapY = 0;
+
+                // 마우스를 뗀 시점에 16px 그리드로 자석 스냅 정렬
+                if (this.customLayoutLayer) {
+                    this.customLayoutLayer.iterate((child: any) => {
+                        if (child instanceof Phaser.GameObjects.Container && child.getData('id') === this.layoutDragItemId) {
+                            const gx = Phaser.Math.Clamp(Math.round(child.x / 16), 2, 36);
+                            const gy = Phaser.Math.Clamp(Math.round(child.y / 16), 2, 36);
+                            
+                            child.x = gx * 16;
+                            child.y = gy * 16;
+                            child.setAlpha(1.0); // 투명도 원복
+                            
+                            snapX = gx;
+                            snapY = gy;
+                        }
+                    });
+                }
+
+                if (snapX > 0 && snapY > 0) {
+                    this.layoutItems = this.layoutItems.map((item) =>
+                        item.id === this.layoutDragItemId ? { ...item, x: snapX, y: snapY } : item
+                    );
+                    
+                    // 리액트 상태 동기화 및 DB 저장을 위한 디스패치
+                    eventBus.dispatchEvent(new CustomEvent('layout-item-moved', { detail: { items: this.layoutItems } }));
+                    
+                    // 자석 스냅이 적용된 최종 좌표로 가구 재배치 렌더링
+                    this.renderCustomLayout(this.layoutItems);
+                }
+
                 this.layoutDragItemId = null;
             });
             this.input.on('wheel', (_pointer: Phaser.Input.Pointer, _objects: Phaser.GameObjects.GameObject[], _deltaX: number, deltaY: number) => {
@@ -587,6 +387,7 @@ export class OfficeScene extends Phaser.Scene {
                     container.add([focusRing, sprite, thoughtBubble, emoteBubble, label]);
                     container.setSize(32, 48);
                     container.setInteractive();
+                    container.setDepth(6); // 가구 레이어(Depth 4)보다 위에 배치하여 사람 가려짐 현상 해결
                     this.agentSprites.set(sessionId, container);
 
                     // --- FOCUS MODE: Click to follow ---
@@ -756,51 +557,128 @@ export class OfficeScene extends Phaser.Scene {
             const y = Math.round(item.y) * 16;
             const group = this.add.container(x, y);
             const g = this.add.graphics();
+
+            // 1. 공통 반투명 가구 그림자 (입체감 유도)
+            g.fillStyle(0x000000, 0.3);
+            g.fillCircle(1, 3, 7);
+
             switch (item.type) {
                 case 'plant':
-                    g.fillStyle(0x8b4513, 1);
+                    // 고급스러운 대리석/황동 화분 묘사 (사다리꼴)
+                    g.fillStyle(0x8a97a8, 1); // 실버 대리석
                     g.fillRect(-5, 0, 10, 8);
-                    g.fillStyle(0x27ae60, 1);
-                    g.fillCircle(0, -5, 6);
-                    g.fillStyle(0x2ecc71, 1);
-                    g.fillCircle(-3, -7, 4);
-                    g.fillCircle(4, -6, 4);
+                    g.fillStyle(0xffd700, 1); // 황동 포인트 밴드
+                    g.fillRect(-5, 2, 10, 2);
+                    
+                    // 몬스테라 관엽식물 스타일 잎맥 디테일
+                    g.fillStyle(0x1b4d3e, 1); // 짙은 초록
+                    g.fillCircle(0, -6, 6);
+                    g.fillStyle(0x2d7a5f, 1); // 밝은 녹색 잎사귀 겹침
+                    g.fillCircle(-4, -8, 4);
+                    g.fillCircle(4, -7, 4);
+                    g.fillStyle(0x52b788, 1); // 잎사귀 끝 하이라이트
+                    g.fillCircle(1, -9, 3);
                     break;
                 case 'desk':
-                    g.fillStyle(0x6d4c2e, 1);
-                    g.fillRect(-12, -8, 24, 16);
-                    g.fillStyle(0x2d3436, 1);
-                    g.fillRect(-8, -6, 10, 6);
+                    // 고급 원목 상판
+                    g.fillStyle(0x4a2c11, 1); // 로즈우드 본체
+                    g.fillRect(-14, -8, 28, 16);
+                    g.fillStyle(0x6e4726, 1); // 베벨 하이라이트 상판
+                    g.fillRect(-12, -6, 24, 12);
+                    
+                    // 데스크 미니어처 묘사 (고급 듀얼 모니터 & 키보드)
+                    g.fillStyle(0x1a1a2e, 1); // 검정 듀얼 와이드 모니터
+                    g.fillRect(-10, -4, 20, 2);
+                    g.fillStyle(0xdcdde1, 1); // 은색 키보드
+                    g.fillRect(-4, 2, 8, 2);
+                    g.fillStyle(0x00a8ff, 1); // 스마트 워크 램프
+                    g.fillRect(8, -2, 2, 2);
                     break;
                 case 'bookshelf':
-                    g.fillStyle(0x6d4c2e, 1);
+                    // 고급 3단 월넛 서재 책장
+                    g.fillStyle(0x3e2723, 1);
                     g.fillRect(-8, -12, 16, 24);
-                    g.fillStyle(0xfdcb6e, 1);
-                    g.fillRect(-6, -8, 3, 6);
-                    g.fillStyle(0x0984e3, 1);
-                    g.fillRect(-2, -8, 3, 6);
-                    g.fillStyle(0xe17055, 1);
-                    g.fillRect(2, -8, 3, 6);
+                    g.fillStyle(0x4e342e, 1); // 선반 테두리 입체
+                    g.strokeRect(-8, -12, 16, 24);
+                    
+                    // 다채롭고 높낮이가 무작위인 고급 서적 연출
+                    const bookColors = [0xe74c3c, 0x3498db, 0xf1c40f, 0x2ecc71, 0x9b59b6, 0xe67e22, 0x1abc9c];
+                    // 1단 서적
+                    for (let b = 0; b < 3; b++) {
+                        g.fillStyle(bookColors[(b + index) % bookColors.length], 1);
+                        g.fillRect(-6 + b * 4, -9, 3, 7);
+                    }
+                    // 2단 서적 (약간 비스듬히 기울어짐 표현)
+                    g.fillStyle(bookColors[(1 + index) % bookColors.length], 1);
+                    g.fillRect(-6, -1, 3, 7);
+                    g.fillStyle(bookColors[(3 + index) % bookColors.length], 1);
+                    g.fillRect(-2, -1, 3, 7);
+                    g.fillStyle(bookColors[(5 + index) % bookColors.length], 1);
+                    // 비스듬히 눕혀진 책 픽셀
+                    g.fillRect(2, 1, 4, 5);
+
+                    // 3단 서적
+                    for (let b = 0; b < 3; b++) {
+                        g.fillStyle(bookColors[(b + index + 2) % bookColors.length], 1);
+                        g.fillRect(-6 + b * 4, 7, 3, 4);
+                    }
                     break;
                 case 'coffee_machine':
-                    g.fillStyle(0x2d3436, 1);
+                    // 크롬 에스프레소 머신 디자인
+                    g.fillStyle(0xb2bec3, 1); // 크롬 바디
                     g.fillRect(-6, -8, 12, 16);
-                    g.fillStyle(0xd63031, 1);
-                    g.fillCircle(0, 4, 2);
+                    g.fillStyle(0xdfe6e9, 1); // 전면 메탈 플레이트
+                    g.fillRect(-4, -6, 8, 12);
+                    g.fillStyle(0x2d3436, 1); // 추출구 및 디스플레이 패널
+                    g.fillRect(-3, -4, 6, 4);
+                    g.fillStyle(0x00b894, 1); // 커피 추출 활성화 녹색 LED
+                    g.fillCircle(0, 4, 1.5);
                     break;
                 case 'table':
-                    g.fillStyle(0x6d4c2e, 1);
+                    // 라운드 코너 베이지 대리석 회의 테이블
+                    g.fillStyle(0xdcdde1, 1); // 회색 하단 프레임
+                    g.fillRect(-11, -7, 22, 14);
+                    g.fillStyle(0xf5f6fa, 1); // 대리석 상판
                     g.fillRect(-10, -6, 20, 12);
+                    // 가벼운 대리석 마블 패턴 드로잉
+                    g.lineStyle(1, 0xd2dae2, 0.8);
+                    g.beginPath();
+                    g.moveTo(-6, -2);
+                    g.lineTo(2, 4);
+                    g.moveTo(4, -4);
+                    g.lineTo(-2, 2);
+                    g.strokePath();
                     break;
                 case 'chair':
-                    g.fillStyle(0x4a4a6a, 1);
-                    g.fillCircle(0, 0, 6);
+                    // U자형 메쉬 등받이 및 팔걸이가 있는 고급 오피스 의자
+                    g.lineStyle(1.5, 0x2f3640, 1); // 튼튼한 프레임
+                    g.strokeCircle(0, 0, 7);
+                    
+                    g.fillStyle(0x2f3640, 1); // 시크한 챠콜 메쉬 백레스트
+                    g.fillCircle(0, -2, 5);
+                    g.fillStyle(0x706fd3, 1); // 프리미엄 딥블루 의자 시트
+                    g.fillCircle(0, 1, 4.5);
+                    
+                    // 의자 바퀴 다리 실루엣 (크롬 포인트)
+                    g.fillStyle(0x7f8c8d, 1);
+                    g.fillRect(-1, 5, 2, 2);
                     break;
                 case 'whiteboard':
-                    g.fillStyle(0xdfe6e9, 1);
+                    // 알루미늄 다리 프레임이 있는 보드
+                    g.fillStyle(0x718093, 1); // 메탈 다리 지지대
+                    g.fillRect(-10, -6, 2, 16);
+                    g.fillRect(8, -6, 2, 16);
+                    
+                    g.fillStyle(0xdcdde1, 1); // 외관 베젤 프레임
                     g.fillRect(-10, -6, 20, 12);
-                    g.lineStyle(1, 0x636e72, 1);
-                    g.strokeRect(-10, -6, 20, 12);
+                    g.fillStyle(0xffffff, 1); // 화이트보드 면
+                    g.fillRect(-9, -5, 18, 10);
+                    
+                    // 하단 컬러 펜 트레이
+                    g.fillStyle(0xe74c3c, 1); // 레드 마커
+                    g.fillRect(-4, 5, 2, 1);
+                    g.fillStyle(0x2980b9, 1); // 블루 마커
+                    g.fillRect(0, 5, 2, 1);
                     break;
                 default:
                     g.fillStyle(0xb2bec3, 1);
@@ -808,14 +686,18 @@ export class OfficeScene extends Phaser.Scene {
             }
             group.add(g);
             if (item.label) {
-                const label = this.add.text(0, 10, item.label.slice(0, 8), { fontSize: '8px', color: '#dfe6f3' }).setOrigin(0.5, 0);
+                const label = this.add.text(0, 12, item.label.slice(0, 8), { fontSize: '8px', color: '#dfe6f3', fontStyle: 'bold' }).setOrigin(0.5, 0);
+                label.setName('furniture-label');
+                label.setVisible(this.layoutEditMode); // 배치 모드일 때만 보이도록 초기 가시성 지정
                 group.add(label);
             }
             group.setSize(22, 22);
+            group.setData('id', item.id);
             group.setInteractive(new Phaser.Geom.Rectangle(-11, -11, 22, 22), Phaser.Geom.Rectangle.Contains);
             group.on('pointerdown', () => {
                 if (!this.layoutEditMode) return;
                 this.layoutDragItemId = item.id;
+                group.setAlpha(0.65);
             });
             this.customLayoutLayer.add(group);
         }

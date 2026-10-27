@@ -38,15 +38,15 @@ export function AgentPulseBoard() {
     return (
         <FloatingPanel
             id="agent-pulse"
-            title="Agent Pulse"
-            subtitle="Mood, risk, momentum"
+            title="에이전트 활성도"
+            subtitle="기분, 리스크, 추진력"
             width={300}
             defaultDock="left"
             defaultY={420}
             zIndex={14}
         >
             {sortedAgents.length === 0 && (
-                <div style={{ fontSize: 11, color: '#86c6b5' }}>Waiting for live telemetry...</div>
+                <div style={{ fontSize: 11, color: '#86c6b5' }}>실시간 데이터 대기 중...</div>
             )}
             {sortedAgents.map((agent) => (
                 <div key={agent.id} style={{
@@ -58,10 +58,10 @@ export function AgentPulseBoard() {
                         {agent.name} <span style={{ fontWeight: 400, color: '#98ccb9' }}>({agent.action})</span>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, fontSize: 10, marginTop: 4, color: '#cbe9df' }}>
-                        <div>Mood: {pct(agent.mood)}</div>
-                        <div>Reputation: {pct(agent.reputation)}</div>
-                        <div>Risk: {pct(agent.riskLevel)}</div>
-                        <div>Momentum: {pct(agent.momentum)}</div>
+                        <div>기분: {pct(agent.mood)}</div>
+                        <div>평판: {pct(agent.reputation)}</div>
+                        <div>위험도: {pct(agent.riskLevel)}</div>
+                        <div>추진력: {pct(agent.momentum)}</div>
                     </div>
                 </div>
             ))}

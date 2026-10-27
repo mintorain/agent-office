@@ -31,15 +31,15 @@ export function RelationshipGraph() {
     return (
         <FloatingPanel
             id="relationship-graph"
-            title="Relationship Graph"
-            subtitle="Alliances and rivalries"
+            title="관계망 동향"
+            subtitle="에이전트 간의 동맹과 경쟁"
             width={300}
             defaultDock="right"
             defaultY={220}
             zIndex={16}
         >
             {visible.length === 0 && (
-                <div style={{ fontSize: 11, color: '#cdbca4' }}>No strong alliances or rivalries yet.</div>
+                <div style={{ fontSize: 11, color: '#cdbca4' }}>아직 뚜렷한 동맹이나 경쟁 관계가 없습니다.</div>
             )}
             {visible.map((edge, idx) => {
                 const isAlliance = edge.status === 'alliance';
@@ -53,7 +53,7 @@ export function RelationshipGraph() {
                             {edge.aName} {isAlliance ? '🤝' : '⚔️'} {edge.bName}
                         </div>
                         <div style={{ fontSize: 10, color: '#f9e7d0' }}>
-                            {edge.status} ({Math.round(Math.abs(edge.score) * 100)} intensity)
+                            {edge.status === 'alliance' ? '동맹 관계' : '경쟁 관계'} (강도 {Math.round(Math.abs(edge.score) * 100)}%)
                         </div>
                     </div>
                 );

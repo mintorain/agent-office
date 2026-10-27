@@ -20,8 +20,8 @@ export function HighlightsFeed() {
             setItems((prev) => {
                 const next = [{
                     id: idRef.current++,
-                    type: detail.type || 'event',
-                    title: detail.title || 'Office Moment',
+                    type: detail.type || '이벤트',
+                    title: detail.title || '사무실 이벤트',
                     body: detail.body || '',
                     time: new Date().toLocaleTimeString()
                 }, ...prev];
@@ -36,15 +36,15 @@ export function HighlightsFeed() {
     return (
         <FloatingPanel
             id="highlight-feed"
-            title="Highlight Timeline"
-            subtitle="Live dramatic moments"
+            title="하이라이트 피드"
+            subtitle="실시간 주요 순간들"
             width={320}
             defaultDock="right"
             defaultY={430}
             zIndex={15}
         >
             {items.length === 0 && (
-                <div style={{ fontSize: 11, color: '#8ca4d6' }}>Waiting for dramatic moments...</div>
+                <div style={{ fontSize: 11, color: '#8ca4d6' }}>주요 이벤트를 기다리는 중...</div>
             )}
             {items.map((item) => (
                 <div key={item.id} style={{

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getColyseusRoom } from '../game/Game';
 import { eventBus } from '../events';
+import { FloatingPanel } from './FloatingPanel';
 
 interface FurnitureItem {
     id: string;
@@ -11,13 +12,13 @@ interface FurnitureItem {
 }
 
 const FURNITURE_PALETTE: { type: FurnitureItem['type']; emoji: string; label: string }[] = [
-    { type: 'desk', emoji: '🖥️', label: 'Desk' },
-    { type: 'plant', emoji: '🌿', label: 'Plant' },
-    { type: 'bookshelf', emoji: '📚', label: 'Bookshelf' },
-    { type: 'coffee_machine', emoji: '☕', label: 'Coffee' },
-    { type: 'table', emoji: '🪑', label: 'Table' },
-    { type: 'chair', emoji: '💺', label: 'Chair' },
-    { type: 'whiteboard', emoji: '📝', label: 'Board' },
+    { type: 'desk', emoji: '🖥️', label: '책상' },
+    { type: 'plant', emoji: '🌿', label: '화분' },
+    { type: 'bookshelf', emoji: '📚', label: '책장' },
+    { type: 'coffee_machine', emoji: '☕', label: '커피머신' },
+    { type: 'table', emoji: '🪑', label: '테이블' },
+    { type: 'chair', emoji: '💺', label: '의자' },
+    { type: 'whiteboard', emoji: '📝', label: '화이트보드' },
 ];
 
 export function LayoutEditor() {
@@ -103,91 +104,92 @@ export function LayoutEditor() {
                     zIndex: 10
                 }}
             >
-                🏗️ Layout Editor
+                🏗️ 가구 배치 편집
             </button>
         );
     }
 
     return (
-        <div style={{
-            position: 'absolute', left: 20, bottom: 20, width: 280,
-            backgroundColor: 'rgba(10,10,30,0.95)', color: 'white',
-            padding: 16, borderRadius: 12,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
-            border: '1px solid rgba(108,92,231,0.3)',
-            maxHeight: '40vh', display: 'flex', flexDirection: 'column',
-            zIndex: 20
-        }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                <h3 style={{ margin: 0, fontSize: '14px' }}>🏗️ Office Layout Editor</h3>
-                <button onClick={() => setIsOpen(false)} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '16px' }}>✕</button>
-            </div>
+        <FloatingPanel
+            id="layout-editor"
+            title="🏗️ 가구 배치 편집"
+            subtitle="사무실 가구 추가 및 배치"
+            width={280}
+            defaultDock="left"
+            defaultY={280}
+            zIndex={20}
+        >
+            <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '35vh' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 6 }}>
+                    <button onClick={() => setIsOpen(false)} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#aaa', cursor: 'pointer', fontSize: '11px', borderRadius: 4, padding: '3px 6px' }}>닫기</button>
+                </div>
 
-            <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '11px', marginBottom: 8, color: '#c9cff8' }}>
-                <input type="checkbox" checked={moveMode} onChange={(e) => setMoveMode(e.target.checked)} />
-                Drag items with mouse on canvas
-            </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '11px', marginBottom: 8, color: '#c9cff8' }}>
+                    <input type="checkbox" checked={moveMode} onChange={(e) => setMoveMode(e.target.checked)} />
+                    화면 캔버스에서 마우스 드래그로 이동 가능
+                </label>
 
-            {/* Furniture Palette */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
-                {FURNITURE_PALETTE.map(f => (
-                    <button
-                        key={f.type}
-                        onClick={() => setSelected(f.type)}
-                        style={{
-                            padding: '4px 8px', borderRadius: 6, border: 'none',
-                            backgroundColor: selected === f.type ? '#6c5ce7' : '#2d2d4d',
-                            color: 'white', cursor: 'pointer', fontSize: '11px'
-                        }}
-                    >
-                        {f.emoji} {f.label}
-                    </button>
-                ))}
-            </div>
+                {/* Furniture Palette */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
+                    {FURNITURE_PALETTE.map(f => (
+                        <button
+                            key={f.type}
+                            onClick={() => setSelected(f.type)}
+                            style={{
+                                padding: '4px 8px', borderRadius: 6, border: 'none',
+                                backgroundColor: selected === f.type ? '#6c5ce7' : '#2d2d4d',
+                                color: 'white', cursor: 'pointer', fontSize: '11px'
+                            }}
+                        >
+                            {f.emoji} {f.label}
+                        </button>
+                    ))}
+                </div>
 
-            <button onClick={addItem} style={{
-                padding: '6px', borderRadius: 6, border: 'none',
-                backgroundColor: '#00b894', color: 'white', cursor: 'pointer',
-                fontSize: '11px', fontWeight: 'bold', marginBottom: 8
-            }}>
-                + Add {FURNITURE_PALETTE.find(f => f.type === selected)?.label}
-            </button>
+                <button onClick={addItem} style={{
+                    padding: '6px', borderRadius: 6, border: 'none',
+                    backgroundColor: '#00b894', color: 'white', cursor: 'pointer',
+                    fontSize: '11px', fontWeight: 'bold', marginBottom: 8
+                }}>
+                    + {FURNITURE_PALETTE.find(f => f.type === selected)?.label} 추가하기
+                </button>
 
-            {/* Item List */}
-            <div style={{ flex: 1, overflowY: 'auto', fontSize: '11px', marginBottom: 8 }}>
-                {items.length === 0 && (
-                    <p style={{ color: '#555', fontStyle: 'italic', margin: 0 }}>
-                        Select furniture type and click Add to place items.
-                    </p>
-                )}
-                {items.map(item => (
-                    <div key={item.id} style={{
-                        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                        padding: '4px 6px', marginBottom: 2, borderRadius: 4,
-                        backgroundColor: 'rgba(255,255,255,0.05)'
-                    }}>
-                        <span>{FURNITURE_PALETTE.find(f => f.type === item.type)?.emoji} {item.label} ({Math.round(item.x)},{Math.round(item.y)})</span>
-                        <div style={{ display: 'flex', gap: 2 }}>
-                            <button onClick={() => nudgeItem(item.id, -1, 0)} style={{ background: 'none', border: 'none', color: '#8ecae6', cursor: 'pointer', fontSize: '11px' }}>◀</button>
-                            <button onClick={() => nudgeItem(item.id, 1, 0)} style={{ background: 'none', border: 'none', color: '#8ecae6', cursor: 'pointer', fontSize: '11px' }}>▶</button>
-                            <button onClick={() => nudgeItem(item.id, 0, -1)} style={{ background: 'none', border: 'none', color: '#8ecae6', cursor: 'pointer', fontSize: '11px' }}>▲</button>
-                            <button onClick={() => nudgeItem(item.id, 0, 1)} style={{ background: 'none', border: 'none', color: '#8ecae6', cursor: 'pointer', fontSize: '11px' }}>▼</button>
-                            <button onClick={() => removeItem(item.id)} style={{
-                                background: 'none', border: 'none', color: '#e17055',
-                                cursor: 'pointer', fontSize: '12px'
-                            }}>🗑</button>
+                {/* Item List */}
+                <div style={{ flex: 1, overflowY: 'auto', fontSize: '11px', marginBottom: 8, maxHeight: '20vh' }}>
+                    {items.length === 0 && (
+                        <p style={{ color: '#555', fontStyle: 'italic', margin: 0 }}>
+                            가구 종류를 선택한 뒤 추가 버튼을 눌러 배치해보세요.
+                        </p>
+                    )}
+                    {items.map(item => (
+                        <div key={item.id} style={{
+                            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                            padding: '4px 6px', marginBottom: 2, borderRadius: 4,
+                            backgroundColor: 'rgba(255,255,255,0.05)'
+                        }}>
+                            <span>{FURNITURE_PALETTE.find(f => f.type === item.type)?.emoji} {item.label} ({Math.round(item.x)},{Math.round(item.y)})</span>
+                            <div style={{ display: 'flex', gap: 2 }}>
+                                <button onClick={() => nudgeItem(item.id, -1, 0)} style={{ background: 'none', border: 'none', color: '#8ecae6', cursor: 'pointer', fontSize: '11px' }}>◀</button>
+                                <button onClick={() => nudgeItem(item.id, 1, 0)} style={{ background: 'none', border: 'none', color: '#8ecae6', cursor: 'pointer', fontSize: '11px' }}>▶</button>
+                                <button onClick={() => nudgeItem(item.id, 0, -1)} style={{ background: 'none', border: 'none', color: '#8ecae6', cursor: 'pointer', fontSize: '11px' }}>▲</button>
+                                <button onClick={() => nudgeItem(item.id, 0, 1)} style={{ background: 'none', border: 'none', color: '#8ecae6', cursor: 'pointer', fontSize: '11px' }}>▼</button>
+                                <button onClick={() => removeItem(item.id)} style={{
+                                    background: 'none', border: 'none', color: '#e17055',
+                                    cursor: 'pointer', fontSize: '12px'
+                                }}>🗑</button>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
 
-            <button onClick={saveLayout} style={{
-                padding: '8px', borderRadius: 6, border: 'none',
-                backgroundColor: '#6c5ce7', color: 'white', cursor: 'pointer',
-                fontSize: '12px', fontWeight: 'bold'
-            }}>
-                💾 Save Layout
-            </button>
-        </div>
+                <button onClick={saveLayout} style={{
+                    padding: '8px', borderRadius: 6, border: 'none',
+                    backgroundColor: '#6c5ce7', color: 'white', cursor: 'pointer',
+                    fontSize: '12px', fontWeight: 'bold'
+                }}>
+                    💾 배치 저장
+                </button>
+            </div>
+        </FloatingPanel>
     );
 }
